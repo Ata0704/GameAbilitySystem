@@ -28,4 +28,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* ViewCamera;
+
+	void InitAbilityActorInfo();
 };

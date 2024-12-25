@@ -6,7 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include <Player/MainPlayerState.h>
+#include "Player/MainPlayerState.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -36,13 +36,23 @@ void AMainCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 
 	// Init ability actor info for the server
-	AMainPlayerState* AuraPlayerState = GetPlayerState<AMainPlayerState>();
-	check(AuraPlayerState);
-	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this); 
+	InitAbilityActorInfo();
 }
 
 void AMainCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
 
+	// Init ability actor info for the client
+	InitAbilityActorInfo();
+}
+
+void AMainCharacter::InitAbilityActorInfo()
+{
+	AMainPlayerState* AuraPlayerState = GetPlayerState<AMainPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
+
+	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AttributeSet = AuraPlayerState->GetAttributeSet();
 }
